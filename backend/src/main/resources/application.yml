@@ -1,0 +1,31 @@
+server:
+  port: 8083
+spring:
+  application:
+    name: cemetery-system
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/cemetery_db?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&createDatabaseIfNotExist=true
+    username: ${DB_USERNAME:cemetery}
+    password: ${DB_PASSWORD:}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 20MB
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: Asia/Shanghai
+cemetery:
+  jwt:
+    secret: cemetery-jwt-secret-key-for-smart-cemetery-system-2026-please-keep-long-enough
+    expire-hours: 24
+logging:
+  level:
+    com.cemetery: info
