@@ -19,6 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder; import org.
   if(req.getRealName()!=null)u.setRealName(req.getRealName()); if(req.getPhone()!=null)u.setPhone(req.getPhone());
   if(req.getEmail()!=null)u.setEmail(req.getEmail()); if(req.getRole()!=null)u.setRole(req.getRole());
   if(req.getStatus()!=null)u.setStatus(req.getStatus()); if(req.getAddress()!=null)u.setAddress(req.getAddress());
+  if(req.getAvatarUrl()!=null)u.setAvatarUrl(req.getAvatarUrl()); if(req.getAvatarEmoji()!=null)u.setAvatarEmoji(req.getAvatarEmoji());
   return Result.ok(users.save(u)); }
  @PutMapping("/{id}/toggle") @PreAuthorize("hasRole('ADMIN')") public Result<SysUser> toggle(@PathVariable Long id){
   SysUser u=users.findById(id).orElseThrow(()->new BizException("用户不存在"));

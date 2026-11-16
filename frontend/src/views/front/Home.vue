@@ -19,7 +19,7 @@
     <el-row :gutter="14">
       <el-col :span="8" v-for="(a,i) in (ov.areas||[])" :key="a.id" style="margin-bottom:14px">
         <div class="area-card" @click="$router.push('/plot-map')">
-          <div class="aemoji">{{ a.coverEmoji }}</div>
+          <div class="cover"><img v-if="a.coverUrl" :src="a.coverUrl" :alt="a.name" /><span v-else class="aemoji">{{ a.coverEmoji }}</span></div>
           <div class="aname">{{ a.name }} <el-tag size="small">{{ a.type }}</el-tag></div>
           <p>{{ a.description }}</p>
           <div class="aprice">起价 <span class="money">{{ money(a.priceFrom) }}</span> · 点击查看平面图选墓 →</div>
@@ -30,7 +30,7 @@
     <el-row :gutter="14">
       <el-col :span="8" v-for="s in (ov.hotServices||[])" :key="s.id" style="margin-bottom:14px">
         <div class="svc" @click="$router.push('/front-services')">
-          <div class="aemoji">{{ s.coverEmoji }}</div>
+          <div class="cover"><img v-if="s.coverUrl" :src="s.coverUrl" :alt="s.name" /><span v-else class="aemoji">{{ s.coverEmoji }}</span></div>
           <div class="aname">{{ s.name }}</div><p>{{ s.description }}</p>
           <div class="aprice"><span class="money">{{ money(s.price) }}</span> / {{ s.unit }} · 已售 {{ s.sales }}</div>
         </div>
@@ -60,6 +60,6 @@ onMounted(async () => { const r = await request.get('/public/overview'); ov.valu
 .sec{ color:#173f35; margin:24px 0 12px }
 .area-card,.svc{ background:#fff; border:1px solid #e8e2d2; border-radius:14px; padding:18px; cursor:pointer; height:100%; transition:.15s }
 .area-card:hover,.svc:hover{ transform:translateY(-3px); box-shadow:0 10px 24px rgba(23,63,53,.13); border-color:#c9a45c }
-.aemoji{ font-size:34px } .aname{ font-weight:700; color:#173f35; margin:6px 0 } .area-card p,.svc p{ color:#777; font-size:13px; line-height:1.7; min-height:44px }
+.aemoji{ font-size:34px } .cover{ margin-bottom:8px } .cover img{ width:100%; height:132px; object-fit:cover; border-radius:10px; display:block } .aname{ font-weight:700; color:#173f35; margin:6px 0 } .area-card p,.svc p{ color:#777; font-size:13px; line-height:1.7; min-height:44px }
 .aprice{ font-size:13px; color:#8a7a52 } .nrow{ display:flex; gap:10px; align-items:center; padding:9px 2px; border-bottom:1px dashed #eee7d5 } .nrow span{ color:#9aa39d; font-size:12px }
 </style>

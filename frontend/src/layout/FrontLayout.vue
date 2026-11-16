@@ -12,7 +12,7 @@
       </nav>
       <div class="fuser">
         <template v-if="auth.user">
-          <span class="hello">{{ auth.user.avatarEmoji }} {{ auth.user.realName }}</span>
+          <span class="hello"><img v-if="auth.user.avatarUrl" class="havatar" :src="auth.user.avatarUrl" /><span v-else>{{ auth.user.avatarEmoji }} </span>{{ auth.user.realName }}</span>
           <el-button size="small" @click="go('/my')">家属中心</el-button>
           <el-button size="small" text @click="logout">退出</el-button>
         </template>
@@ -45,4 +45,8 @@ nav{ display:flex; gap:20px; flex:1; flex-wrap:wrap } nav a{ cursor:pointer; col
 .fmain{ flex:1; width:100%; max-width:1240px; margin:0 auto; padding:22px 20px 34px }
 .ffoot{ text-align:center; padding:20px; background:#123128; color:#b9c4bd; font-size:13px }
 .staff-link{ margin-top:6px; cursor:pointer; color:#7d8f85; font-size:12px } .staff-link:hover{ color:#c9a45c }
+</style>
+
+<style scoped>
+.havatar{ width:26px; height:26px; border-radius:50%; object-fit:cover; vertical-align:-7px; margin-right:4px }
 </style>

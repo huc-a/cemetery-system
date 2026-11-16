@@ -7,5 +7,5 @@ import java.math.BigDecimal; import java.time.*;
  private String gender; private LocalDate birthDate; private LocalDate deathDate;
  private Integer age; private Long plotId; private String plotNo;
  private Long familyId; private String familyName; private String relation;
- @Column(length=1000) private String biography; private String photoEmoji;
+ @Column(length=1000) private String biography; private String photoEmoji; private String photoUrl;
  private LocalDate burialDate; private LocalDateTime createTime=LocalDateTime.now(); }

@@ -24,7 +24,8 @@ import com.cemetery.security.JwtUtil; import org.springframework.security.crypto
   SysUser u=users.findByUsername(a.getName()).orElseThrow(()->new BizException("用户不存在"));
   if(req.getRealName()!=null)u.setRealName(req.getRealName()); if(req.getPhone()!=null)u.setPhone(req.getPhone());
   if(req.getEmail()!=null)u.setEmail(req.getEmail()); if(req.getAddress()!=null)u.setAddress(req.getAddress());
-  if(req.getAvatarEmoji()!=null)u.setAvatarEmoji(req.getAvatarEmoji()); users.save(u); return Result.ok(u); }
+  if(req.getAvatarEmoji()!=null)u.setAvatarEmoji(req.getAvatarEmoji());
+  if(req.getAvatarUrl()!=null)u.setAvatarUrl(req.getAvatarUrl()); users.save(u); return Result.ok(u); }
  @PostMapping("/change-password") public Result<Void> cp(Authentication a,@RequestBody ChangePwdReq req){
   SysUser u=users.findByUsername(a.getName()).orElseThrow(()->new BizException("用户不存在"));
   if(!encoder.matches(req.getOldPassword(),u.getPassword())) throw new BizException("原密码不正确");

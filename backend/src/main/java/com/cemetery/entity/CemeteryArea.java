@@ -5,5 +5,5 @@ import java.math.BigDecimal; import java.time.*;
  @Id @GeneratedValue(strategy=GenerationType.IDENTITY) private Long id;
  @Column(nullable=false,length=60) private String name;
  private String code; private String type; private String description;
- private BigDecimal priceFrom=BigDecimal.ZERO; private String coverEmoji;
+ private BigDecimal priceFrom=BigDecimal.ZERO; private String coverEmoji; private String coverUrl;
  private Integer sortOrder=0; private LocalDateTime createTime=LocalDateTime.now(); }

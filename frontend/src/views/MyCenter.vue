@@ -10,7 +10,7 @@
     </el-row>
     <el-row :gutter="14">
       <el-col :span="12"><div class="page-card"><div class="ct">我的亲人纪念馆</div>
-        <div v-for="h in halls" :key="h.id" class="mrow" @click="$router.push('/memorials/' + h.id)"><span>{{ h.photoEmoji || '🖼️' }} {{ h.deceasedName }} 纪念馆</span><span>💐 {{ h.flowerCount }} · 🕯️ {{ h.candleCount }} · 💬 {{ h.messageCount }}</span></div>
+        <div v-for="h in halls" :key="h.id" class="mrow" @click="$router.push('/memorials/' + h.id)"><span><img v-if="h.photoUrl" class="mph" :src="h.photoUrl" /><span v-else>{{ h.photoEmoji || '🖼️' }} </span>{{ h.deceasedName }} 纪念馆</span><span>💐 {{ h.flowerCount }} · 🕯️ {{ h.candleCount }} · 💬 {{ h.messageCount }}</span></div>
         <el-empty v-if="!halls.length" description="暂无纪念馆，可在逝者档案中新建" /></div></el-col>
       <el-col :span="12"><div class="page-card"><div class="ct">快捷办理</div>
         <div class="quick">
@@ -43,6 +43,6 @@ onMounted(async () => {
 <style scoped>
 .cards{ margin-bottom:14px } .stat{ background:#fff; border-radius:12px; padding:18px; text-align:center; cursor:pointer; border-top:4px solid #1f5747; box-shadow:0 2px 12px rgba(23,63,53,.06) }
 .stat.warn{ border-top-color:#a44a3f } .num{ font-size:26px; font-weight:800; color:#173f35 }
-.ct{ font-weight:700; color:#173f35; margin-bottom:10px } .mrow{ display:flex; justify-content:space-between; padding:9px 2px; border-bottom:1px dashed #eee7d5; cursor:pointer }
+.ct{ font-weight:700; color:#173f35; margin-bottom:10px } .mrow{ display:flex; justify-content:space-between; padding:9px 2px; border-bottom:1px dashed #eee7d5; cursor:pointer } .mph{ width:26px; height:31px; object-fit:cover; border-radius:5px; vertical-align:middle; margin-right:5px }
 .quick{ display:flex; flex-wrap:wrap; gap:10px }
 </style>

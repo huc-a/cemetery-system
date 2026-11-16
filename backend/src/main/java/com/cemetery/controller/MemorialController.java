@@ -18,7 +18,8 @@ import java.math.BigDecimal; import java.time.*; import java.util.*; import java
   MemorialHall h=halls.findById(id).orElseThrow(()->new BizException("纪念馆不存在"));
   if(CurrentUser.isFamily(a)&&!CurrentUser.id(a).equals(h.getFamilyId())) throw new BizException("无权编辑他人纪念馆");
   if(r.getEpitaph()!=null)h.setEpitaph(r.getEpitaph()); if(r.getBiography()!=null)h.setBiography(r.getBiography());
-  if(r.getPhotoEmoji()!=null)h.setPhotoEmoji(r.getPhotoEmoji()); return Result.ok(halls.save(h)); }
+  if(r.getPhotoEmoji()!=null)h.setPhotoEmoji(r.getPhotoEmoji());
+  if(r.getPhotoUrl()!=null)h.setPhotoUrl(r.getPhotoUrl()); return Result.ok(halls.save(h)); }
  // 云祭扫动作：献花 FLOWER / 点烛 CANDLE / 留言 MESSAGE / 上香 INCENSE / 鞠躬 BOW —— 计数落库
  @Data public static class ActionReq{ private String actionType; private String content; }
  @PostMapping("/{id}/action") @Transactional public Result<MemorialHall> action(Authentication a,@PathVariable Long id,@RequestBody ActionReq req){

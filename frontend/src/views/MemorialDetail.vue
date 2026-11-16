@@ -1,7 +1,7 @@
 <template>
   <div v-if="hall" class="wrap2">
     <div class="hero">
-      <div class="big">{{ hall.photoEmoji || '🖼️' }}</div>
+      <img v-if="hall.photoUrl" class="bigimg" :src="hall.photoUrl" :alt="hall.deceasedName" /><div v-else class="big">{{ hall.photoEmoji || '🖼️' }}</div>
       <h2>{{ hall.deceasedName }} 纪念馆</h2>
       <div class="epitaph">「{{ hall.epitaph }}」</div>
       <div class="meta">{{ hall.plotNo }} · 家属 {{ hall.familyName }} 敬立 · 已被瞻仰 {{ hall.visitCount }} 次</div>
@@ -30,6 +30,7 @@
     <el-dialog v-model="editDlg" title="编辑纪念馆" width="480px">
       <el-form label-width="70px">
         <el-form-item label="墓志铭"><el-input v-model="editForm.epitaph" /></el-form-item>
+        <el-form-item label="照片"><ImageUpload v-model="editForm.photoUrl" :size="86" /></el-form-item>
         <el-form-item label="生平"><el-input v-model="editForm.biography" type="textarea" :rows="4" /></el-form-item>
       </el-form>
       <template #footer><el-button @click="editDlg=false">取消</el-button><el-button type="primary" @click="saveEdit">保存</el-button></template>
@@ -42,14 +43,15 @@ import { useRoute } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import request from '../utils/request'
 import { useAuthStore } from '../store/auth'
+import ImageUpload from '../components/ImageUpload.vue'
 const route = useRoute(); const auth = useAuthStore()
 const hall = ref(null); const acts = ref([]); const msg = ref('')
-const editDlg = ref(false); const editForm = reactive({ epitaph: '', biography: '' })
+const editDlg = ref(false); const editForm = reactive({ epitaph: '', biography: '', photoUrl: '' })
 const canEdit = computed(() => hall.value && (auth.isStaffSide || (auth.user && auth.user.id === hall.value.familyId)))
 const NAMES = { FLOWER: '献上鲜花 💐', CANDLE: '点亮烛光 🕯️', INCENSE: '上香一炷 🪔', BOW: '鞠躬致哀 🙏', MESSAGE: '留言' }
 const label = a => NAMES[a.actionType] || a.actionType
 async function load(){ const r = await request.get('/memorials/' + route.params.id); hall.value = r.data.hall; acts.value = r.data.actions
-  editForm.epitaph = hall.value.epitaph; editForm.biography = hall.value.biography }
+  editForm.epitaph = hall.value.epitaph; editForm.biography = hall.value.biography; editForm.photoUrl = hall.value.photoUrl || '' }
 async function act(t){ if (!auth.user) return ElMessage.warning('请先登录后进行云祭扫')
   try { const r = await request.post(`/memorials/${route.params.id}/action`, { actionType: t, content: t === 'MESSAGE' ? msg.value : null })
     hall.value = r.data; if (t === 'MESSAGE') msg.value = ''; ElMessage.success('已记录您的哀思'); const a = await request.get(`/memorials/${route.params.id}/actions`); acts.value = a.data } catch (e) {} }
@@ -59,7 +61,7 @@ onMounted(load)
 <style scoped>
 .wrap2{ max-width:860px; margin:0 auto }
 .hero{ text-align:center; padding:30px 16px 22px; background:linear-gradient(180deg,#173f35,#1f5747); border-radius:16px; color:#f3ead3; margin-bottom:14px }
-.big{ font-size:58px } .hero h2{ margin:8px 0 4px } .epitaph{ color:#c9a45c } .meta{ font-size:12px; color:#b9c4bd; margin-top:6px }
+.big{ font-size:58px } .bigimg{ width:132px; height:164px; object-fit:cover; border-radius:12px; border:3px solid #c9a45c; box-shadow:0 8px 22px rgba(0,0,0,.35) } .hero h2{ margin:8px 0 4px } .epitaph{ color:#c9a45c } .meta{ font-size:12px; color:#b9c4bd; margin-top:6px }
 .ct{ font-weight:700; color:#173f35; margin-bottom:8px } .bio{ color:#555; line-height:1.8; margin:0 }
 .actions{ display:flex; gap:10px; flex-wrap:wrap; margin-top:14px } .content{ color:#666 }
 </style>

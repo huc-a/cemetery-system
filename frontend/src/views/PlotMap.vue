@@ -4,12 +4,12 @@
     <div class="page-sub">按墓区查看平面网格图：颜色代表墓位状态，点击墓位查看详情{{ auth.isFamily || !auth.user ? '，空闲墓位可直接预订 / 购买' : '' }}。</div>
     <div class="toolbar">
       <el-radio-group v-model="areaId" @change="load">
-        <el-radio-button v-for="a in areas" :key="a.id" :value="a.id">{{ a.coverEmoji }} {{ a.name }}</el-radio-button>
+        <el-radio-button v-for="a in areas" :key="a.id" :value="a.id"><img v-if="a.coverUrl" class="mini" :src="a.coverUrl" /><span v-else>{{ a.coverEmoji }} </span>{{ a.name }}</el-radio-button>
       </el-radio-group>
       <span class="spacer"></span>
       <span v-for="(label,s) in PLOT_STATUS" :key="s" class="legend"><i :style="{background:PLOT_COLOR[s]}"></i>{{ label }}</span>
     </div>
-    <div v-if="curArea" class="area-info">{{ curArea.coverEmoji }} <b>{{ curArea.name }}</b> · {{ curArea.type }} · {{ curArea.description }} · 起价 <span class="money">{{ money(curArea.priceFrom) }}</span></div>
+    <div v-if="curArea" class="area-info"><img v-if="curArea.coverUrl" class="ainfo" :src="curArea.coverUrl" /><span v-else>{{ curArea.coverEmoji }} </span><b>{{ curArea.name }}</b> · {{ curArea.type }} · {{ curArea.description }} · 起价 <span class="money">{{ money(curArea.priceFrom) }}</span></div>
     <div class="grid-wrap">
       <div v-for="row in rows" :key="row" class="grow">
         <div class="rlabel">{{ row }}排</div>
@@ -80,6 +80,7 @@ onMounted(async () => { await loadAreas(); if (auth.isStaffSide) { const r = awa
 <style scoped>
 .legend{ font-size:12px; color:#666; display:inline-flex; align-items:center; gap:4px } .legend i{ width:12px; height:12px; border-radius:3px; display:inline-block }
 .area-info{ background:#f7f4ec; border-radius:8px; padding:10px 14px; margin-bottom:14px; font-size:13px; color:#5c5648 }
+.mini{ width:28px; height:19px; object-fit:cover; border-radius:4px; vertical-align:-4px; margin-right:4px } .ainfo{ width:84px; height:54px; object-fit:cover; border-radius:8px; vertical-align:middle; margin-right:8px }
 .grid-wrap{ overflow-x:auto; padding:6px 2px } .grow{ display:flex; align-items:center; gap:8px; margin-bottom:8px }
 .rlabel{ width:36px; color:#8a8f8c; font-size:12px; text-align:right; flex:none }
 .cell{ width:86px; flex:none; border-radius:9px; color:#fff; padding:8px 6px; cursor:pointer; text-align:center; transition:.15s; box-shadow:inset 0 -3px 0 rgba(0,0,0,.15) }

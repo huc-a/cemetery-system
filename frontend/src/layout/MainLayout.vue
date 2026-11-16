@@ -29,7 +29,7 @@
         <div class="htitle">{{ $route.meta.title || '智慧墓园' }}</div>
         <div class="huser">
           <el-tag v-if="feeAlert>0" type="danger" effect="dark" class="alert-tag" @click="$router.push('/fees')">⚠ 管理费逾期/临期 {{ feeAlert }} 笔</el-tag>
-          <span>{{ auth.user?.avatarEmoji }} {{ auth.user?.realName }}（{{ roleName }}）</span>
+          <span><img v-if="auth.user?.avatarUrl" class="havatar" :src="auth.user.avatarUrl" /><span v-else>{{ auth.user?.avatarEmoji }} </span>{{ auth.user?.realName }}（{{ roleName }}）</span>
           <el-button size="small" @click="goFront">家属前台</el-button>
           <el-button size="small" type="danger" plain @click="logout">退出</el-button>
         </div>
@@ -50,7 +50,7 @@ function goFront(){ router.push('/home') }
 onMounted(async () => { try { const r = await request.get('/fees/alerts'); feeAlert.value = (r.data.overdueCount || 0) + (r.data.dueSoonCount || 0) } catch (e) {} })
 </script>
 <style scoped>
-.shell{ height:100vh }
+.shell{ height:100vh } .havatar{ width:26px; height:26px; border-radius:50%; object-fit:cover; vertical-align:-7px; margin-right:4px }
 .aside{ background:linear-gradient(180deg,#123128,#1a4636 60%,#123128); padding:16px 10px; overflow-y:auto }
 .logo{ color:#f3ead3; font-size:19px; font-weight:700; padding:4px 10px } .logo-sub{ color:#c9a45c; font-size:12px; padding:0 10px 14px }
 .menu{ border:none } .menu :deep(.el-menu-item){ border-radius:8px; margin:2px 0 } .menu :deep(.el-menu-item.is-active){ background:rgba(201,164,92,.18) }

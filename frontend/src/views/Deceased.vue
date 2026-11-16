@@ -4,7 +4,7 @@
     <div class="toolbar"><el-input v-model="kw" placeholder="按姓名搜索" clearable style="width:200px" @keyup.enter="load" @clear="load" /><el-button @click="load">查询</el-button>
       <span class="spacer"></span><el-button type="primary" @click="open()">＋ 新建档案</el-button></div>
     <el-table :data="rows" stripe>
-      <el-table-column label="逝者" min-width="120"><template #default="s">{{ s.row.photoEmoji || '🖼️' }} <b>{{ s.row.name }}</b>（{{ s.row.gender }}）</template></el-table-column>
+      <el-table-column label="逝者" min-width="150"><template #default="s"><img v-if="s.row.photoUrl" class="photo" :src="s.row.photoUrl" /><span v-else>{{ s.row.photoEmoji || '🖼️' }} </span><b>{{ s.row.name }}</b>（{{ s.row.gender }}）</template></el-table-column>
       <el-table-column label="生卒"><template #default="s">{{ s.row.birthDate }} ～ {{ s.row.deathDate }}（享年 {{ s.row.age }} 岁）</template></el-table-column>
       <el-table-column prop="plotNo" label="安葬墓位" /><el-table-column prop="familyName" label="家属" /><el-table-column prop="relation" label="关系" />
       <el-table-column prop="burialDate" label="安葬日期" /><el-table-column prop="biography" label="生平简介" min-width="220" show-overflow-tooltip />
@@ -21,6 +21,7 @@
         <el-form-item label="逝世日期"><el-date-picker v-model="form.deathDate" type="date" value-format="YYYY-MM-DD" /></el-form-item>
         <el-form-item label="安葬墓位"><el-select v-model="form.plotId" filterable clearable placeholder="选择已售/已安葬墓位" style="width:100%">
           <el-option v-for="p in myPlots" :key="p.id" :value="p.id" :label="p.plotNo + '（' + p.areaName + '）'" /></el-select></el-form-item>
+        <el-form-item label="照片"><ImageUpload v-model="form.photoUrl" :size="80" /></el-form-item>
         <el-form-item label="与家属关系"><el-input v-model="form.relation" placeholder="如 父亲 / 母亲 / 祖父" /></el-form-item>
         <el-form-item label="生平简介"><el-input v-model="form.biography" type="textarea" :rows="3" /></el-form-item>
       </el-form>
@@ -34,12 +35,17 @@ import { useRouter } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import request from '../utils/request'
 import { useAuthStore } from '../store/auth'
+import ImageUpload from '../components/ImageUpload.vue'
 const auth = useAuthStore(); const router = useRouter()
 const rows = ref([]); const kw = ref(''); const dlg = ref(false); const form = reactive({}); const myPlots = ref([])
 async function load(){ const r = await request.get('/deceased', { params: { kw: kw.value } }); rows.value = r.data }
-function open(d){ Object.assign(form, d ? { ...d } : { name: '', gender: '男', birthDate: '', deathDate: '', plotId: null, relation: '', biography: '', photoEmoji: '🖼️' }); dlg.value = true }
+function open(d){ Object.assign(form, d ? { ...d } : { name: '', gender: '男', birthDate: '', deathDate: '', plotId: null, relation: '', biography: '', photoEmoji: '🖼️', photoUrl: '' }); dlg.value = true }
 async function save(){ try { if (form.id) await request.put('/deceased/' + form.id, form); else await request.post('/deceased', form); ElMessage.success('已保存'); dlg.value = false; load() } catch (e) {} }
 async function del(d){ await ElMessageBox.confirm('确认删除档案「' + d.name + '」？', '提示'); try { await request.delete('/deceased/' + d.id); ElMessage.success('已删除'); load() } catch (e) {} }
 async function goHall(d){ const r = await request.get('/memorials'); const h = r.data.find(x => x.deceasedId === d.id); if (h) router.push('/memorials/' + h.id); else ElMessage.info('该逝者暂无纪念馆') }
 onMounted(async () => { load(); const r = await request.get('/plots'); myPlots.value = r.data.filter(p => ['SOLD', 'BURIED'].includes(p.status)) })
 </script>
+
+<style scoped>
+.photo{ width:34px; height:40px; object-fit:cover; border-radius:6px; vertical-align:middle; margin-right:6px }
+</style>

@@ -6,5 +6,5 @@ import java.math.BigDecimal; import java.time.*;
  @Column(nullable=false,unique=true,length=50) private String username;
  @JsonProperty(access=JsonProperty.Access.WRITE_ONLY) @Column(nullable=false) private String password;
  private String realName; @Column(nullable=false,length=20) private String role;
- private String phone; private String email; private String address; private String avatarEmoji;
+ private String phone; private String email; private String address; private String avatarEmoji; private String avatarUrl;
  private Integer status=1; private LocalDateTime createTime=LocalDateTime.now(); }

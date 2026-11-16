@@ -8,7 +8,7 @@
     </div>
     <el-table :data="rows" stripe>
       <el-table-column prop="id" label="ID" width="60" />
-      <el-table-column label="用户" min-width="170"><template #default="s">{{ s.row.avatarEmoji || '👤' }} <b>{{ s.row.realName }}</b>（{{ s.row.username }}）</template></el-table-column>
+      <el-table-column label="用户" min-width="190"><template #default="s"><img v-if="s.row.avatarUrl" class="avatar" :src="s.row.avatarUrl" /><span v-else>{{ s.row.avatarEmoji || '👤' }} </span><b>{{ s.row.realName }}</b>（{{ s.row.username }}）</template></el-table-column>
       <el-table-column label="角色" width="110"><template #default="s"><el-tag :type="s.row.role==='ADMIN'?'danger':s.row.role==='STAFF'?'warning':'success'">{{ {ADMIN:'管理员',STAFF:'工作人员',FAMILY:'家属'}[s.row.role] }}</el-tag></template></el-table-column>
       <el-table-column prop="phone" label="手机" /><el-table-column prop="email" label="邮箱" /><el-table-column prop="address" label="住址" show-overflow-tooltip />
       <el-table-column label="状态" width="86"><template #default="s"><el-tag :type="s.row.status===1?'success':'info'">{{ s.row.status===1?'启用':'禁用' }}</el-tag></template></el-table-column>
@@ -23,6 +23,7 @@
         <el-form-item label="用户名" v-if="!form.id"><el-input v-model="form.username" /></el-form-item>
         <el-form-item label="密码" v-if="!form.id"><el-input v-model="form.password" placeholder="不填默认 123456" /></el-form-item>
         <el-form-item label="姓名"><el-input v-model="form.realName" /></el-form-item>
+        <el-form-item label="头像"><ImageUpload v-model="form.avatarUrl" :size="72" /></el-form-item>
         <el-form-item label="角色"><el-select v-model="form.role"><el-option value="ADMIN" label="管理员" /><el-option value="STAFF" label="工作人员" /><el-option value="FAMILY" label="家属/客户" /></el-select></el-form-item>
         <el-form-item label="手机"><el-input v-model="form.phone" /></el-form-item>
         <el-form-item label="邮箱"><el-input v-model="form.email" /></el-form-item>
@@ -37,12 +38,17 @@ import { onMounted, reactive, ref } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import request from '../utils/request'
 import { useAuthStore } from '../store/auth'
+import ImageUpload from '../components/ImageUpload.vue'
 const auth = useAuthStore()
 const rows = ref([]); const role = ref(''); const kw = ref(''); const dlg = ref(false); const form = reactive({})
 async function load(){ const r = await request.get('/users', { params: { role: role.value, kw: kw.value } }); rows.value = r.data }
-function open(u){ Object.assign(form, u ? { ...u } : { username: '', password: '', realName: '', role: 'FAMILY', phone: '', email: '', address: '' }); dlg.value = true }
+function open(u){ Object.assign(form, u ? { ...u } : { username: '', password: '', realName: '', role: 'FAMILY', phone: '', email: '', address: '', avatarUrl: '' }); dlg.value = true }
 async function save(){ try { if (form.id) await request.put('/users/' + form.id, form); else await request.post('/users', form); ElMessage.success('已保存'); dlg.value = false; load() } catch (e) {} }
 async function toggle(u){ try { await request.put(`/users/${u.id}/toggle`); ElMessage.success('已更新'); load() } catch (e) {} }
 async function del(u){ await ElMessageBox.confirm('确认删除用户 ' + u.realName + '？', '提示'); try { await request.delete('/users/' + u.id); ElMessage.success('已删除'); load() } catch (e) {} }
 onMounted(load)
 </script>
+
+<style scoped>
+.avatar{ width:30px; height:30px; border-radius:50%; object-fit:cover; vertical-align:middle; margin-right:6px }
+</style>

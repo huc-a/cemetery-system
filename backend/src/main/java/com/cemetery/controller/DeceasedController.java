@@ -19,7 +19,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
   r.setId(null); r.setCreateTime(LocalDateTime.now()); repo.save(r);
   // 自动创建在线纪念馆（一人一馆）
   MemorialHall h=new MemorialHall(); h.setDeceasedId(r.getId()); h.setDeceasedName(r.getName()); h.setPlotId(r.getPlotId()); h.setPlotNo(r.getPlotNo());
-  h.setFamilyId(r.getFamilyId()); h.setFamilyName(r.getFamilyName()); h.setBiography(r.getBiography()); h.setPhotoEmoji(r.getPhotoEmoji());
+  h.setFamilyId(r.getFamilyId()); h.setFamilyName(r.getFamilyName()); h.setBiography(r.getBiography()); h.setPhotoEmoji(r.getPhotoEmoji()); h.setPhotoUrl(r.getPhotoUrl());
   h.setEpitaph("音容宛在，永志不忘"); halls.save(h);
   return Result.ok(r); }
  @PutMapping("/{id}") public Result<Deceased> update(Authentication a,@PathVariable Long id,@RequestBody Deceased r){
@@ -28,6 +28,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
   if(r.getName()!=null)d.setName(r.getName()); if(r.getBiography()!=null)d.setBiography(r.getBiography());
   if(r.getRelation()!=null)d.setRelation(r.getRelation()); if(r.getBirthDate()!=null)d.setBirthDate(r.getBirthDate());
   if(r.getDeathDate()!=null)d.setDeathDate(r.getDeathDate()); if(r.getPhotoEmoji()!=null)d.setPhotoEmoji(r.getPhotoEmoji());
+  if(r.getPhotoUrl()!=null){ d.setPhotoUrl(r.getPhotoUrl());
+   // 同步纪念馆照片（纪念馆与逝者用同一张）
+   halls.findAll().stream().filter(h->d.getId().equals(h.getDeceasedId())).forEach(h->{ h.setPhotoUrl(r.getPhotoUrl()); halls.save(h); }); }
   if(d.getBirthDate()!=null&&d.getDeathDate()!=null) d.setAge(java.time.Period.between(d.getBirthDate(),d.getDeathDate()).getYears());
   return Result.ok(repo.save(d)); }
  @DeleteMapping("/{id}") @PreAuthorize("hasRole('ADMIN')") public Result<Void> del(@PathVariable Long id){repo.deleteById(id); return Result.ok(); } }

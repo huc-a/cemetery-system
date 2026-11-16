@@ -25,7 +25,7 @@
     </el-table>
     <el-dialog v-model="dlg" title="订购服务" width="500px">
       <el-form label-width="86px">
-        <el-form-item label="服务项目"><el-select v-model="form.productId" style="width:100%"><el-option v-for="s in svcList" :key="s.id" :value="s.id" :label="s.coverEmoji + ' ' + s.name + '（' + money(s.price) + '/' + s.unit + '）'" /></el-select></el-form-item>
+        <el-form-item label="服务项目"><el-select v-model="form.productId" style="width:100%"><el-option v-for="s in svcList" :key="s.id" :value="s.id" :label="s.name + '（' + money(s.price) + '/' + s.unit + '）'"><img v-if="s.coverUrl" class="mini" :src="s.coverUrl" /><span v-else>{{ s.coverEmoji }} </span>{{ s.name }}（{{ money(s.price) }}/{{ s.unit }}）</el-option></el-select></el-form-item>
         <el-form-item label="关联墓位"><el-select v-model="form.plotId" filterable clearable style="width:100%"><el-option v-for="p in plots" :key="p.id" :value="p.id" :label="p.plotNo" /></el-select></el-form-item>
         <el-form-item label="数量"><el-input-number v-model="form.quantity" :min="1" /></el-form-item>
         <el-form-item label="服务日期"><el-date-picker v-model="form.serviceDate" type="date" value-format="YYYY-MM-DD" /></el-form-item>
@@ -59,3 +59,7 @@ onMounted(async () => { load(); const s = await request.get(auth.user ? '/servic
   const p = await request.get('/plots').catch(() => null); if (p) plots.value = p.data
   if (auth.isStaffSide) { const st = await request.get('/users/staff'); staffList.value = st.data } })
 </script>
+
+<style scoped>
+.mini{ width:30px; height:30px; object-fit:cover; border-radius:6px; vertical-align:middle; margin-right:6px }
+</style>

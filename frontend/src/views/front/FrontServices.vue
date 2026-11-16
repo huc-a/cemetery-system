@@ -8,7 +8,7 @@
     <el-row :gutter="14">
       <el-col :span="8" v-for="s in rows" :key="s.id" style="margin-bottom:14px">
         <div class="svc">
-          <div class="aemoji">{{ s.coverEmoji }}</div>
+          <div class="cover"><img v-if="s.coverUrl" :src="s.coverUrl" :alt="s.name" /><span v-else class="aemoji">{{ s.coverEmoji }}</span></div>
           <div class="aname">{{ s.name }} <el-tag size="small" type="success">{{ s.category }}</el-tag></div>
           <p>{{ s.description }}</p>
           <div class="row2"><span class="money big">{{ money(s.price) }} / {{ s.unit }}</span><span class="sold">已售 {{ s.sales }}</span></div>
@@ -35,6 +35,6 @@ onMounted(async () => { const r = await request.get('/public/services'); all.val
 <style scoped>
 .head{ text-align:center; padding-top:10px } .head h2{ color:#173f35; margin:0 0 6px } .head p{ color:#8a8f8c }
 .svc{ background:#fff; border:1px solid #e8e2d2; border-radius:14px; padding:18px; height:100% }
-.aemoji{ font-size:34px } .aname{ font-weight:700; color:#173f35; margin:6px 0 } .svc p{ color:#777; font-size:13px; line-height:1.7; min-height:44px }
+.aemoji{ font-size:34px } .cover{ margin-bottom:8px } .cover img{ width:100%; height:150px; object-fit:cover; border-radius:10px; display:block } .aname{ font-weight:700; color:#173f35; margin:6px 0 } .svc p{ color:#777; font-size:13px; line-height:1.7; min-height:44px }
 .row2{ display:flex; justify-content:space-between; align-items:center } .big{ font-size:16px } .sold{ color:#9aa39d; font-size:12px }
 </style>

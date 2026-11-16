@@ -8,7 +8,7 @@
     <el-row :gutter="14" style="margin-top:16px">
       <el-col :span="6" v-for="h in rows" :key="h.id" style="margin-bottom:14px">
         <div class="hall" @click="open(h)">
-          <div class="emoji">{{ h.photoEmoji || '🖼️' }}</div>
+          <img v-if="h.photoUrl" class="photo" :src="h.photoUrl" :alt="h.deceasedName" /><div v-else class="emoji">{{ h.photoEmoji || '🖼️' }}</div>
           <div class="name">{{ h.deceasedName }} 纪念馆</div>
           <div class="epitaph">「{{ h.epitaph }}」</div>
           <div class="stats">💐 {{ h.flowerCount }} · 🕯️ {{ h.candleCount }} · 💬 {{ h.messageCount }}</div>
@@ -32,5 +32,5 @@ onMounted(load)
 .head{ text-align:center; padding:14px 0 4px } .head h2{ color:#173f35; margin:0 0 6px } .head p{ color:#8a8f8c }
 .hall{ background:linear-gradient(180deg,#fff,#f7f4ec); border:1px solid #e8e2d2; border-radius:14px; padding:20px 14px; text-align:center; cursor:pointer; transition:.15s }
 .hall:hover{ transform:translateY(-3px); box-shadow:0 10px 24px rgba(23,63,53,.14); border-color:#c9a45c }
-.emoji{ font-size:42px } .name{ font-weight:700; color:#173f35; margin-top:6px } .epitaph{ color:#8a7a52; font-size:12px; margin:4px 0 } .stats{ font-size:12px; color:#666 }
+.emoji{ font-size:42px } .photo{ width:96px; height:116px; object-fit:cover; border-radius:10px; border:2px solid #e3d9bd; box-shadow:0 4px 12px rgba(23,63,53,.15) } .name{ font-weight:700; color:#173f35; margin-top:6px } .epitaph{ color:#8a7a52; font-size:12px; margin:4px 0 } .stats{ font-size:12px; color:#666 }
 </style>
